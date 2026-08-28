@@ -10,7 +10,9 @@ function App() {
   const [media, setMedia] = useState('');
   const [situacao, setSituacao] = useState('');
 
-  const calculo = () => {
+  const calculo = (e) => {
+    e.preventDefault();
+
     let av1Float = parseFloat(av1);
     let av2Float = parseFloat(av2);
     let av3Float = parseFloat(av3);
@@ -34,7 +36,7 @@ function App() {
     if (med >= 7){
       sit = "aprovado";
     } else if (med <= 6.9 && med >= 5){
-      sit = "recuperação";
+      sit = "recuperacao";
     } else {
       sit = "reprovado";
     }
@@ -52,18 +54,28 @@ function App() {
     setSituacao('');
   };
 
+  const msg = () => {
+    const aluno = nome.trim() || "estudante";
+    if (situacao === "aprovado") {
+      return `Parabéns, ${aluno}! Você foi aprovado(a) com média ${media}.`;
+    } else if (situacao === "recuperacao") {
+      return `${aluno}, você ficou de recuperação com média ${media}. Estude mais.`;
+    } else {
+      return `${aluno}, você infelizmente foi reprovado(a) com média ${media}. Boa sorte na próxima vez.`;
+    }
+  };
+
   return (
-    <>
-      <section id="center">
-        <div>
+    <div className='corpo'>
+      <div className='calc'>
+        <div className='cabecalho'>
           <h1>Calculadora de Média</h1>
           <h2>Descubra sua média e situação atual</h2>
         </div>
 
-        <div>
-          <form action="get">
-            <div>
-              <label>Nome:</label>
+          <form onSubmit={calculo}>
+            <div className='inputs'>
+              <label htmlFor="nome">Nome:</label>
               <input 
                 name='nome'
                 type="text"
@@ -74,76 +86,82 @@ function App() {
               />
             </div>
 
-            <div>
-              <label>Primeira avaliação:</label>
-              <input
-                name='av1'
-                type="number"
-                id='av1'
-                placeholder='Informe a primeira nota'
-                value={av1}
-                onChange={(e) => setAv1(e.target.value)}
-              />
+            <div className='notas'>
+              <div className='inputs'>
+                <label htmlFor='av1'>Primeira avaliação:</label>
+                <input
+                  name='av1'
+                  type="number"
+                  step='0.1'
+                  id='av1'
+                  placeholder='1ª nota'
+                  value={av1}
+                  onChange={(e) => setAv1(e.target.value)}
+                />
+              </div>
+
+              <div className='inputs'>
+                <label htmlFor='av2'>Segunda avaliação:</label>
+                <input
+                  name='av2'
+                  type="number"
+                  step='0.1'
+                  id='av2'
+                  placeholder='2ª nota'
+                  value={av2}
+                  onChange={(e) => setAv2(e.target.value)}
+                />
+              </div>
+
+              <div className='inputs'>
+                <label htmlFor='av3'>Terceira avaliação:</label>
+                <input
+                  name='av3'
+                  type="number"
+                  step='0.1'
+                  id='av3'
+                  placeholder='3ª nota'
+                  value={av3}
+                  onChange={(e) => setAv3(e.target.value)}
+                />
+              </div>
+
+              <div className='inputs'>
+                <label htmlFor='av4'>Quarta avaliação:</label>
+                <input
+                  name='av4'
+                  type="number"
+                  step='0.1'
+                  id='av4'
+                  placeholder='4ª nota'
+                  value={av4}
+                  onChange={(e) => setAv4(e.target.value)}
+                />
+              </div>
             </div>
 
-            <div>
-              <label>Segunda avaliação:</label>
-              <input
-                name='av2'
-                type="number"
-                id='av2'
-                placeholder='Informe a segunda nota'
-                value={av2}
-                onChange={(e) => setAv2(e.target.value)}
-              />
-            </div>
+            <div className='btns'>
+              <button
+                type="submit"
+                className='btn01'>Resultado</button>
 
-            <div>
-              <label>Terceira avaliação:</label>
-              <input
-                name='av3'
-                type="number"
-                id='av3'
-                placeholder='Informe a terceira nota'
-                value={av3}
-                onChange={(e) => setAv3(e.target.value)}
-              />
-            </div>
-
-            <div>
-              <label>Quarta avaliação:</label>
-              <input
-                name='av4'
-                type="number"
-                id='av4'
-                placeholder='Informe a quarta nota'
-                value={av4}
-                onChange={(e) => setAv4(e.target.value)}
-              />
-            </div>
-          </form>
-
-          <div>
-            <div>
-              <button onClick={calculo}>Resultado</button>
-            </div>
-
-            <div>
-              <button onClick={limpar}>Limpar</button>
-            </div>
+              <button
+                type="button"
+                onClick={limpar}
+                className='btn02'>Limpar</button>
           </div>
 
-          {nome && situacao && media && (
-            <div style={{marginTop: '20px'}}>
-              <h2>Resultado:</h2>
-              <p>O aluno {nome} está {situacao} com média {media}</p>
-            </div>
-          )
-          }
+          </form>
 
-        </div>
-      </section>
-    </>
+          {situacao && media && (
+            <div className={`resultado-box ${situacao}`}>
+              <h3>Resultado:</h3>
+              <p>{msg()}</p>
+            </div>
+          )}
+
+      </div>
+    </div>
   )
 }
 
